@@ -1,0 +1,34 @@
+.button {
+  background: $brand-blue;
+  color: $bg-pastel;
+  border: none;
+  font-size: 1rem;
+  padding: $spacing-default;
+  border-radius: $spacing-xxs;
+  cursor: pointer;
+  transition: background .2s;
+
+  &:hover {
+    background: $active-blue;
+  }
+}
+
+.button--clean {
+  border: none;
+  background: none;
+  color: $brand-blue;
+  padding: $spacing-xs;
+  cursor: pointer;
+
+  &:hover {
+    background: $active-yellow;
+  }
+}
+
+.button--width-150 {
+  width: 150px;
+}
+
+.button--center {
+  margin: auto;
+}

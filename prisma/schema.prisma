@@ -1,0 +1,36 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Competition {
+  id          String       @id @default(uuid())
+  name        String
+  image       String
+  PlayerRanks PlayerRank[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+model Player {
+  id          String       @id @default(uuid())
+  name        String
+  PlayerRanks PlayerRank[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+model PlayerRank {
+  id            String      @id @default(uuid())
+  competition   Competition @relation(fields: [competitionId], references: [id])
+  competitionId String
+  player        Player      @relation(fields: [playerId], references: [id])
+  playerId      String
+  rank          Int
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+}
