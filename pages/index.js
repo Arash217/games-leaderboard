@@ -5,6 +5,7 @@ import prisma from '../lib/prisma'
 import CompetitionsContext from '../store/CompetitionsContext'
 import CompetitionForm from '../components/CompetitionForm'
 import SearchBar from '../components/SearchBar'
+import { withPageAuthRequired } from '@auth0/nextjs-auth0'
 
 export default function Home({ competitions }) {
   const competitionsCtx = useContext(CompetitionsContext)
@@ -83,22 +84,24 @@ export default function Home({ competitions }) {
   )
 }
 
-export async function getServerSideProps() {
-  const competitions = await prisma.competition.findMany({
-    orderBy: [
-      {
-        createdAt: 'asc'
-      }
-    ]
-  })
+export const getServerSideProps = withPageAuthRequired({
+  async getServerSideProps(ctx) {
+    const competitions = await prisma.competition.findMany({
+      orderBy: [
+        {
+          createdAt: 'asc',
+        },
+      ],
+    })
 
-  return {
-    props: {
-      competitions: competitions.map(competition => ({
-        ...competition,
-        createdAt: competition.createdAt.toISOString(),
-        updatedAt: competition.updatedAt.toISOString()
-      }))
-    },
-  }
-}
+    return {
+      props: {
+        competitions: competitions.map((competition) => ({
+          ...competition,
+          createdAt: competition.createdAt.toISOString(),
+          updatedAt: competition.updatedAt.toISOString(),
+        })),
+      },
+    }
+  },
+})
