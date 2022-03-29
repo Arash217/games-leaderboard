@@ -1,0 +1,45 @@
+.ladder {
+  display: flex;
+  flex-direction: column;
+  margin-top: $spacing-xl;
+
+  > li {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+
+    &:last-child > div {
+      border-bottom: none;
+    }
+  }
+}
+
+.rank {
+  padding: $spacing-default;
+  background-color: $brand-blue;
+  color: white;
+  min-width: 50px;
+}
+
+.even {
+  background-color: $active-blue;
+}
+
+.players {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+  border-bottom: 1px solid $brand-blue;
+}
+
+.player {
+  background: $brand-yellow;
+  margin: $spacing-default;
+  padding: $spacing-default;
+  display: flex;
+  align-items: center;
+  padding-right: $spacing-default;
+  border-radius: $spacing-xxs;
+}
