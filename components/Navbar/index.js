@@ -1,8 +1,11 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import styles from './Navbar.module.scss'
+import { useUser } from '@auth0/nextjs-auth0'
 
 export default function Navbar() {
+  const { user } = useUser()
+
   return (
     <header className={styles.header}>
       <nav className={styles.nav}>
@@ -23,6 +26,15 @@ export default function Navbar() {
             </Link>
           </li>
         </ul>
+
+        {user && (
+          <div className={styles.authentication}>
+            <p className={styles.name}>{user.name}</p>
+            <a href='/api/auth/logout' className='button'>
+              Logout
+            </a>
+          </div>
+        )}
       </nav>
     </header>
   )
