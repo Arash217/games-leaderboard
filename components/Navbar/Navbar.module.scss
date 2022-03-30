@@ -38,3 +38,13 @@
     }
   }
 }
+
+.authentication {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+}
+
+.name {
+  margin-right: $spacing-default;
+}
