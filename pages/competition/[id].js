@@ -3,15 +3,69 @@ import { withPageAuthRequired } from '@auth0/nextjs-auth0'
 import styles from './Competition.module.scss'
 import classNames from 'classnames'
 import Ladder from '../../components/Ladder'
+import { getSession, useUser } from '@auth0/nextjs-auth0'
+import { useState, useEffect } from 'react'
 
-export default function Competition({ competition }) {
+function checkIfInCompetition(competition, session) {
+  const player = competition.PlayerRanks.find((playerRank) => {
+    return playerRank.player.googleUserId === session?.user?.sub
+  })
+
+  if (player) {
+    return true
+  }
+
+  return false
+}
+
+export default function Competition({
+  competition,
+  isInCompetition: _isInCompetition,
+}) {
+  const [isInCompetition, setIsInCompetition] = useState(_isInCompetition)
+  const userCtx = useUser()
+
+  useEffect(() => {
+    if (checkIfInCompetition(competition, userCtx)) {
+      setIsInCompetition(true)
+    }
+  }, [competition, isInCompetition, userCtx])
+
+  async function handleJoinCompetition() {
+    try {
+      const res = await fetch(`/api/competitions/${competition.id}/join`, {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+        },
+      })
+
+      const data = await res.json()
+
+      if (!res.ok) {
+        throw new Error(data.message)
+      }
+    } catch (err) {
+      console.log(err.message)
+    }
+  }
+
   return (
     <div>
       <h1 className={'h1'}>{competition.name}</h1>
 
-      <button className={classNames('button', styles.join)}>
-        Join Competition
-      </button>
+      {!isInCompetition ? (
+        <button
+          className={classNames('button', styles.join)}
+          onClick={handleJoinCompetition}
+        >
+          Join Competition
+        </button>
+      ) : (
+        <button className={classNames('button', styles.leave)}>
+          Leave Competition
+        </button>
+      )}
 
       <Ladder competition={competition} />
     </div>
@@ -63,9 +117,13 @@ export const getServerSideProps = withPageAuthRequired({
 
     competition.groupedPlayerRanks = groupedPlayerRanks
 
+    const session = getSession(ctx.req, ctx.res)
+    const isInCompetition = checkIfInCompetition(competition, session)
+
     return {
       props: {
         competition,
+        isInCompetition,
       },
     }
   },
