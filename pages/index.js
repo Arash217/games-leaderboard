@@ -96,11 +96,7 @@ export const getServerSideProps = withPageAuthRequired({
 
     return {
       props: {
-        competitions: competitions.map((competition) => ({
-          ...competition,
-          createdAt: competition.createdAt.toISOString(),
-          updatedAt: competition.updatedAt.toISOString(),
-        })),
+        competitions
       },
     }
   },

@@ -8,6 +8,7 @@ const nextConfig = {
       @import "${path.join(__dirname, 'styles/variables.scss')}";
       @import "${path.join(__dirname, 'styles/buttons.scss')}";
       @import "${path.join(__dirname, 'styles/inputs.scss')}";
+      @import "${path.join(__dirname, 'styles/typography.scss')}";
     `,
   }
 }
