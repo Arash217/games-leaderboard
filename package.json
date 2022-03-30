@@ -1,20 +1,29 @@
 {
-  "name": "game-scoreboard",
+  "name": "games-leaderboard",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:deploy": "prisma migrate deploy",
+    "prisma:push": "prisma db push"
   },
   "dependencies": {
+    "@prisma/client": "^3.11.0",
+    "@tippyjs/react": "^4.2.6",
+    "classnames": "^2.3.1",
     "next": "12.1.0",
     "react": "17.0.2",
     "react-dom": "17.0.2"
   },
   "devDependencies": {
     "eslint": "8.11.0",
-    "eslint-config-next": "12.1.0"
+    "eslint-config-next": "12.1.0",
+    "prisma": "^3.11.0",
+    "sass": "^1.49.9"
   }
 }

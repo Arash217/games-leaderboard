@@ -1,0 +1,40 @@
+.header {
+  background-color: $brand-yellow;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: $page-width;
+  margin: $spacing-default $spacing-xl;
+}
+
+.navList {
+  display: flex;
+  flex-direction: row;
+
+  > li {
+    padding-left: $spacing-l;
+
+    > a {
+      display: inline-block;
+      font-size: 1rem;
+      color: $brand-blue;
+      padding-bottom: $spacing-xxs;
+
+      &:visited {
+        color: $brand-blue;
+      }
+
+      &:hover,
+      &:focus {
+        background: transparent
+          linear-gradient(0deg, $brand-blue 2px, transparent 0);
+      }
+    }
+  }
+}

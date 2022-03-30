@@ -1,0 +1,48 @@
+.backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  z-index: 1;
+  background-color: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+}
+
+.modal {
+  position: fixed;
+  top: $spacing-xxl;
+  left: 5%;
+  width: 90%;
+  background-color: $bg-pastel;
+  border-radius: $spacing-xxs;
+  z-index: 2;
+  color: $brand-blue;
+
+  @media (min-width: $media-m) {
+    width: 600px;
+    left: calc(50% - 300px);
+  }
+}
+
+.modalHeader {
+  background: $brand-yellow;
+  padding: $spacing-default;
+  border-top-left-radius: $spacing-xxs;
+  border-top-right-radius: $spacing-xxs;
+  font-size: 1.2rem;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+}
+
+.modalClose {
+  margin-left: auto;
+  cursor: pointer;
+}
+
+.modalContent {
+  padding: $spacing-default;
+  display: flex;
+  flex-direction: column;
+}

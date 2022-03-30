@@ -1,0 +1,19 @@
+.tippy-box[data-theme~='custom'] {
+  background: $brand-yellow;
+}
+
+.tippy-box[data-theme~='custom'][data-placement^='top'] > .tippy-arrow::before {
+  border-top-color: $brand-yellow;
+}
+
+.tippy-box[data-theme~='custom'][data-placement^='bottom'] > .tippy-arrow::before {
+  border-bottom-color: $brand-yellow;
+}
+
+.tippy-box[data-theme~='custom'][data-placement^='left'] > .tippy-arrow::before {
+  border-left-color: $brand-yellow;
+}
+
+.tippy-box[data-theme~='custom'][data-placement^='right'] > .tippy-arrow::before {
+  border-right-color: $brand-yellow;
+}
