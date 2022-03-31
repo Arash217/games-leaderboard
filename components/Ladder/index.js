@@ -25,7 +25,7 @@ export default function Ladder() {
             {groupedPlayerRank.map((playerRank) => (
               <div className={classNames(styles.player)} key={playerRank.id}>
                 {playerRank.player.googleUserId === userCtx?.user?.sub && (
-                  <div className={styles.pulse} />
+                  <div className={styles.highlight} />
                 )}
                 <span className={styles['player-name']}>
                   {playerRank.player.name}
