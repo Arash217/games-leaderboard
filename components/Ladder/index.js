@@ -3,9 +3,11 @@ import classNames from 'classnames'
 import isEven from '../../lib/isEven'
 import { useContext } from 'react'
 import PlayerRanksContext from '../../store/PlayerRanksContext'
+import { useUser } from '@auth0/nextjs-auth0'
 
 export default function Ladder() {
   const playerRanksCtx = useContext(PlayerRanksContext)
+  const userCtx = useUser()
 
   return (
     <ul className={styles.ladder}>
@@ -21,8 +23,13 @@ export default function Ladder() {
           </div>
           <div className={styles.players}>
             {groupedPlayerRank.map((playerRank) => (
-              <div className={styles.player} key={playerRank.id}>
-                <span>{playerRank.player.name}</span>
+              <div className={classNames(styles.player)} key={playerRank.id}>
+                {playerRank.player.googleUserId === userCtx?.user?.sub && (
+                  <div className={styles.pulse} />
+                )}
+                <span className={styles['player-name']}>
+                  {playerRank.player.name}
+                </span>
               </div>
             ))}
           </div>
