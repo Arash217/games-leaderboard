@@ -27,7 +27,7 @@ model Player {
 
 model PlayerRank {
   id            String      @id @default(uuid())
-  competition   Competition @relation(fields: [competitionId], references: [id])
+  competition   Competition @relation(fields: [competitionId], references: [id], onDelete: Cascade)
   competitionId String
   player        Player      @relation(fields: [playerId], references: [id])
   playerId      String

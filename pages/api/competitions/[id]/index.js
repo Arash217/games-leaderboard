@@ -77,12 +77,17 @@ async function handleDELETE(req, res) {
 
     res.json({ id })
   } catch (err) {
+    console.log(err)
     switch (err.code) {
       case 'P2025':
         res.status(404).json({
           message: 'Competition not found',
         })
         break
+      default:
+        res.status(400).json({
+          message: 'Something went wrong',
+        })
     }
   }
 }
