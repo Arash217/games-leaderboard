@@ -64,7 +64,7 @@ async function handlePOST(req, res) {
       const currentPlayerRank = playerRanks[i]
       const previousPlayerRank = playerRanks[i - 1]
       currentPlayerRank.rank = previousPlayerRank.rank
-      toBeUpdatedPlayerRanks.push(currentPlayer)
+      toBeUpdatedPlayerRanks.push(currentPlayerRank)
     }
 
     const deletedPlayerRank = await prisma.playerRank.delete({

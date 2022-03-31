@@ -58,6 +58,8 @@ export default function Competition({
       if (!res.ok) {
         throw new Error(data.message)
       }
+
+      playerRanksCtx.remove(data.id)
     } catch (err) {
       console.log(err.message)
     }
