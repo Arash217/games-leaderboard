@@ -14,13 +14,21 @@ const playerRanksReducer = (state, action) => {
     return { playerRanks: [...state.playerRanks, action.playerRank] }
   }
 
-  // if (action.type === 'REMOVE') {
-  //   const updatedCompetitions = state.competitions.filter(
-  //     (competition) => competition.id !== action.id
-  //   )
+  if (action.type === 'REMOVE') {
+    const playerRankIndex = state.playerRanks.findIndex(
+      (playerRank) => playerRank.id === action.id
+    )
 
-  //   return { competitions: updatedCompetitions }
-  // }
+    for (let i = state.playerRanks.length - 1; i > playerRankIndex; i--) {
+      const currentPlayerRank = state.playerRanks[i]
+      const previousPlayerRank = state.playerRanks[i - 1]
+      currentPlayerRank.rank = previousPlayerRank.rank
+    }
+
+    state.playerRanks.splice(playerRankIndex, 1)
+
+    return { playerRanks: [...state.playerRanks] }
+  }
 
   return defaultState
 }
@@ -60,27 +68,26 @@ const PlayerRanksProvider = ({ children }) => {
     })
   }
 
-  const addPlayerRanksHandler = (playerRank) => {
+  const addPlayerRankHandler = (playerRank) => {
     dispatchPlayerRanksAction({
       type: 'ADD',
       playerRank,
     })
   }
 
-  // const removeCompetitionHandler = (id) => {
-  //   dispatchCompetitionsAction({
-  //     type: 'REMOVE',
-  //     id,
-  //   })
-  // }
+  const removePlayerRankHandler = (id) => {
+    dispatchPlayerRanksAction({
+      type: 'REMOVE',
+      id,
+    })
+  }
 
   const playerRanksContext = {
     playerRanks: playerRanksState.playerRanks,
     groupedPlayerRanks,
     set: setPlayerRanksHandler,
-    add: addPlayerRanksHandler,
-    // update: updateCompetitionHandler,
-    // remove: removeCompetitionHandler,
+    add: addPlayerRankHandler,
+    remove: removePlayerRankHandler,
   }
 
   return (
