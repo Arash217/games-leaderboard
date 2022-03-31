@@ -34,10 +34,23 @@ export default function Competition({
   async function handleJoinCompetition() {
     try {
       const res = await fetch(`/api/competitions/${competition.id}/join`, {
-        method: 'POST',
-        headers: {
-          'content-type': 'application/json',
-        },
+        method: 'POST'
+      })
+
+      const data = await res.json()
+
+      if (!res.ok) {
+        throw new Error(data.message)
+      }
+    } catch (err) {
+      console.log(err.message)
+    }
+  }
+
+  async function handleLeaveCompetition() {
+    try {
+      const res = await fetch(`/api/competitions/${competition.id}/leave`, {
+        method: 'POST'
       })
 
       const data = await res.json()
@@ -62,7 +75,10 @@ export default function Competition({
           Join Competition
         </button>
       ) : (
-        <button className={classNames('button', styles.leave)}>
+        <button
+          className={classNames('button', styles.leave)}
+          onClick={handleLeaveCompetition}
+        >
           Leave Competition
         </button>
       )}
