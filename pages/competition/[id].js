@@ -1,3 +1,4 @@
+import Modal from '../../components/Modal'
 import prisma from '../../lib/prisma'
 import { withPageAuthRequired } from '@auth0/nextjs-auth0'
 import styles from './Competition.module.scss'
@@ -15,6 +16,7 @@ export default function Competition({
   const playerRanksCtx = useContext(PlayerRanksContext)
   const [isInCompetition, setIsInCompetition] = useState(_isInCompetition)
   const userCtx = useUser()
+  const [modalShown, setModalShown] = useState(false)
 
   useEffect(() => {
     if (checkIfInCompetition(playerRanksCtx.playerRanks, userCtx)) {
@@ -60,9 +62,18 @@ export default function Competition({
       }
 
       playerRanksCtx.remove(data.id)
+      handleModalClose()
     } catch (err) {
       console.log(err.message)
     }
+  }
+
+  function handleModalOpen() {
+    setModalShown(true)
+  }
+
+  function handleModalClose() {
+    setModalShown(false)
   }
 
   return (
@@ -79,10 +90,26 @@ export default function Competition({
       ) : (
         <button
           className={classNames('button', styles.leave)}
-          onClick={handleLeaveCompetition}
+          onClick={handleModalOpen}
         >
           Leave Competition
         </button>
+      )}
+
+      {modalShown && (
+        <Modal title='Leave competition' onClose={handleModalClose}>
+          Are you sure you want to leave this competition? You will lose your
+          rank!
+          <button
+            className={classNames(
+              'button button--width-150 button--center',
+              styles['leave-button']
+            )}
+            onClick={handleLeaveCompetition}
+          >
+            Leave
+          </button>
+        </Modal>
       )}
 
       <Ladder />

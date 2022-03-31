@@ -119,13 +119,17 @@ export default function CompetitionKebabMenu({ competition }) {
           theme='custom'
           placement='right'
           animation='false'
-          duration="0"
+          duration='0'
           interactive={true}
           appendTo={overlays}
           content={content}
           visible={kebabMenuShown}
         >
-          <div className={styles.kebab} onClick={() => setKebabMenuShown(true)} ref={kebabMenuRef} >
+          <div
+            className={styles.kebab}
+            onClick={() => setKebabMenuShown(true)}
+            ref={kebabMenuRef}
+          >
             <Image src={'/kebab.svg'} alt='kebab menu' width='24' height='24' />
           </div>
         </Tippy>
