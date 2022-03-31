@@ -14,81 +14,94 @@ export default async function handle(req, res) {
 }
 
 async function handlePOST(req, res) {
-  const competition = await prisma.competition.findUnique({
-    where: { id: req.query.id },
-  })
-
-  if (!competition) {
-    return res.status(404).json({
-      message: 'Competition not found',
+  try {
+    const competition = await prisma.competition.findUnique({
+      where: { id: req.query.id },
     })
-  }
 
-  const session = getSession(req, res)
+    if (!competition) {
+      return res.status(404).json({
+        message: 'Competition not found',
+      })
+    }
 
-  const player = await prisma.player.findFirst({
-    where: {
-      googleUserId: session.user.sub,
-    },
-  })
+    const session = getSession(req, res)
 
-  const foundPlayerRank = await prisma.playerRank.findFirst({
-    where: {
-      competitionId: req.query.id,
-      playerId: player.id,
-    },
-  })
-
-  if (foundPlayerRank) {
-    return res.status(400).json({
-      message: `Player is already in this competition`,
+    const player = await prisma.player.findFirst({
+      where: {
+        googleUserId: session.user.sub,
+      },
     })
-  }
 
-  const [lowestPlayerRank] = await prisma.playerRank.findMany({
-    where: {
-      competitionId: req.query.id,
-    },
-    orderBy: {
-      rank: 'desc',
-    },
-    take: 1,
-  })
+    const foundPlayerRank = await prisma.playerRank.findFirst({
+      where: {
+        competitionId: req.query.id,
+        playerId: player.id,
+      },
+    })
 
-  if (!lowestPlayerRank) {
+    if (foundPlayerRank) {
+      return res.status(400).json({
+        message: `Player is already in this competition`,
+      })
+    }
+
+    const [lowestPlayerRank] = await prisma.playerRank.findMany({
+      where: {
+        competitionId: req.query.id,
+      },
+      orderBy: {
+        rank: 'desc',
+      },
+      take: 1,
+    })
+
+    if (!lowestPlayerRank) {
+      const createdPlayerRank = await prisma.playerRank.create({
+        data: {
+          competitionId: req.query.id,
+          playerId: player.id,
+          rank: 1,
+        },
+        include: {
+          player: true
+        }
+      })
+
+      return res.json(createdPlayerRank)
+    }
+
+    const playersInLowestPlayerRank = await prisma.playerRank.count({
+      where: {
+        competitionId: req.query.id,
+        rank: lowestPlayerRank.rank,
+      },
+    })
+
+    let playerRank
+
+    if (lowestPlayerRank && lowestPlayerRank.rank > playersInLowestPlayerRank) {
+      playerRank = lowestPlayerRank.rank
+    } else {
+      playerRank = lowestPlayerRank.rank + 1
+    }
+
     const createdPlayerRank = await prisma.playerRank.create({
       data: {
         competitionId: req.query.id,
         playerId: player.id,
-        rank: 1
+        rank: playerRank,
       },
+      include: {
+        player: true
+      }
     })
 
     return res.json(createdPlayerRank)
+  } catch (err) {
+    console.log(err)
+    res.status(400).json({
+      message: 'Something went wrong',
+    })
   }
-
-  const playersInLowestPlayerRank = await prisma.playerRank.count({
-    where: {
-      competitionId: req.query.id,
-      rank: lowestPlayerRank.rank,
-    },
-  })
-
-  let playerRank
-
-  if (lowestPlayerRank && lowestPlayerRank.rank > playersInLowestPlayerRank) {
-    playerRank = lowestPlayerRank.rank
-  } else {
-    playerRank = lowestPlayerRank.rank + 1
-  }
-
-  const createdPlayerRank = await prisma.playerRank.create({
-    data: {
-      competitionId: req.query.id,
-      playerId: player.id,
-      rank: playerRank
-    },
-  })
-
-  return res.json(createdPlayerRank)
 }

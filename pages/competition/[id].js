@@ -4,37 +4,35 @@ import styles from './Competition.module.scss'
 import classNames from 'classnames'
 import Ladder from '../../components/Ladder'
 import { getSession, useUser } from '@auth0/nextjs-auth0'
-import { useState, useEffect } from 'react'
-
-function checkIfInCompetition(competition, session) {
-  const player = competition.PlayerRanks.find((playerRank) => {
-    return playerRank.player.googleUserId === session?.user?.sub
-  })
-
-  if (player) {
-    return true
-  }
-
-  return false
-}
+import { useState, useEffect, useContext } from 'react'
+import checkIfInCompetition from '../../lib/checkIfInCompetition'
+import PlayerRanksContext from '../../store/PlayerRanksContext'
 
 export default function Competition({
   competition,
   isInCompetition: _isInCompetition,
 }) {
+  const playerRanksCtx = useContext(PlayerRanksContext)
   const [isInCompetition, setIsInCompetition] = useState(_isInCompetition)
   const userCtx = useUser()
 
   useEffect(() => {
-    if (checkIfInCompetition(competition, userCtx)) {
+    if (checkIfInCompetition(playerRanksCtx.playerRanks, userCtx)) {
       setIsInCompetition(true)
+    } else {
+      setIsInCompetition(false)
     }
-  }, [competition, isInCompetition, userCtx])
+  }, [isInCompetition, playerRanksCtx.playerRanks, userCtx])
+
+  useEffect(() => {
+    playerRanksCtx.set(competition.PlayerRanks)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   async function handleJoinCompetition() {
     try {
       const res = await fetch(`/api/competitions/${competition.id}/join`, {
-        method: 'POST'
+        method: 'POST',
       })
 
       const data = await res.json()
@@ -42,6 +40,8 @@ export default function Competition({
       if (!res.ok) {
         throw new Error(data.message)
       }
+
+      playerRanksCtx.add(data)
     } catch (err) {
       console.log(err.message)
     }
@@ -50,7 +50,7 @@ export default function Competition({
   async function handleLeaveCompetition() {
     try {
       const res = await fetch(`/api/competitions/${competition.id}/leave`, {
-        method: 'POST'
+        method: 'POST',
       })
 
       const data = await res.json()
@@ -83,7 +83,7 @@ export default function Competition({
         </button>
       )}
 
-      <Ladder competition={competition} />
+      <Ladder />
     </div>
   )
 }
@@ -115,26 +115,11 @@ export const getServerSideProps = withPageAuthRequired({
       (a, b) => a.rank - b.rank
     )
 
-    const groupedPlayerRanks = []
-
-    competition.PlayerRanks.forEach((playerRank) => {
-      const groupedPlayerRank = groupedPlayerRanks.find((groupedPlayerRank) =>
-        groupedPlayerRank.find(
-          (_playerRank) => _playerRank.rank === playerRank.rank
-        )
-      )
-
-      if (groupedPlayerRank) {
-        groupedPlayerRank.push(playerRank)
-      } else {
-        groupedPlayerRanks.push([playerRank])
-      }
-    })
-
-    competition.groupedPlayerRanks = groupedPlayerRanks
-
     const session = getSession(ctx.req, ctx.res)
-    const isInCompetition = checkIfInCompetition(competition, session)
+    const isInCompetition = checkIfInCompetition(
+      competition.PlayerRanks,
+      session
+    )
 
     return {
       props: {

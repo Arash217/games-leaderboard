@@ -1,11 +1,15 @@
 import styles from './Ladder.module.scss'
 import classNames from 'classnames'
 import isEven from '../../lib/isEven'
+import { useContext } from 'react'
+import PlayerRanksContext from '../../store/PlayerRanksContext'
 
-export default function Ladder({ competition }) {
+export default function Ladder() {
+  const playerRanksCtx = useContext(PlayerRanksContext)
+
   return (
     <ul className={styles.ladder}>
-      {competition.groupedPlayerRanks.map((groupedPlayerRank, index) => (
+      {playerRanksCtx.groupedPlayerRanks.map((groupedPlayerRank, index) => (
         <li key={index}>
           <div
             className={classNames(
