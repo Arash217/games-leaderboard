@@ -6,6 +6,7 @@ import CompetitionsContext from '../store/CompetitionsContext'
 import CompetitionForm from '../components/CompetitionForm'
 import SearchBar from '../components/SearchBar'
 import { withPageAuthRequired } from '@auth0/nextjs-auth0'
+import request from '../lib/request'
 
 export default function Home({ competitions }) {
   const competitionsCtx = useContext(CompetitionsContext)
@@ -41,25 +42,16 @@ export default function Home({ competitions }) {
     const { name, image } = e.target
 
     try {
-      const res = await fetch('/api/competitions', {
+      const data = await request('/api/competitions', {
         method: 'POST',
-        headers: {
-          'content-type': 'application/json',
-        },
         body: JSON.stringify({
           name: name.value,
           image: image.value,
         }),
       })
 
-      const data = await res.json()
-
-      if (!res.ok) {
-        throw new Error(data.message)
-      }
-
-      setModalShown(false)
       competitionsCtx.add(data)
+      setModalShown(false)
     } catch (err) {
       console.log(err.message)
     }

@@ -8,6 +8,7 @@ import Modal from '../Modal'
 import CompetitionForm from '../CompetitionForm'
 import getElementConditionaly from '../../lib/getElementConditionaly'
 import useClickOutside from '../../lib/hooks/useClickOutside'
+import request from '../../lib/request'
 
 export default function CompetitionKebabMenu({ competition }) {
   const [deleteModalShown, setDeleteModalShown] = useState(false)
@@ -25,22 +26,13 @@ export default function CompetitionKebabMenu({ competition }) {
     const { name, image } = e.target
 
     try {
-      const res = await fetch(`/api/competitions/${competition.id}`, {
+      const data = await request(`/api/competitions/${competition.id}`, {
         method: 'PATCH',
-        headers: {
-          'content-type': 'application/json',
-        },
         body: JSON.stringify({
           name: name.value,
           image: image.value,
         }),
       })
-
-      const data = await res.json()
-
-      if (!res.ok) {
-        throw new Error(data.message)
-      }
 
       competitionsCtx.update(data)
       handleEditModalClose()
@@ -51,18 +43,9 @@ export default function CompetitionKebabMenu({ competition }) {
 
   const handleRemove = useCallback(async () => {
     try {
-      const res = await fetch(`/api/competitions/${competition.id}`, {
+      const data = await request(`/api/competitions/${competition.id}`, {
         method: 'DELETE',
-        headers: {
-          'content-type': 'application/json',
-        },
       })
-
-      const data = await res.json()
-
-      if (!res.ok) {
-        throw new Error(data.message)
-      }
 
       competitionsCtx.remove(data.id)
       handleDeleteModalClose()
@@ -94,16 +77,10 @@ export default function CompetitionKebabMenu({ competition }) {
   const content = useMemo(
     () => (
       <div className={styles.menu}>
-        <button
-          className={'button--clean'}
-          onClick={() => handleEditModalOpen()}
-        >
+        <button className={'button--clean'} onClick={handleEditModalOpen}>
           Edit
         </button>
-        <button
-          className={'button--clean'}
-          onClick={() => handleDeleteModalOpen()}
-        >
+        <button className={'button--clean'} onClick={handleDeleteModalOpen}>
           Delete
         </button>
       </div>

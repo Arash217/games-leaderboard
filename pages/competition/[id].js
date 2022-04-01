@@ -8,6 +8,7 @@ import { getSession, useUser } from '@auth0/nextjs-auth0'
 import { useState, useEffect, useContext } from 'react'
 import checkIfInCompetition from '../../lib/checkIfInCompetition'
 import PlayerRanksContext from '../../store/PlayerRanksContext'
+import request from '../../lib/request'
 
 export default function Competition({
   competition,
@@ -33,15 +34,9 @@ export default function Competition({
 
   async function handleJoinCompetition() {
     try {
-      const res = await fetch(`/api/competitions/${competition.id}/join`, {
+      const data = await request(`/api/competitions/${competition.id}/join`, {
         method: 'POST',
       })
-
-      const data = await res.json()
-
-      if (!res.ok) {
-        throw new Error(data.message)
-      }
 
       playerRanksCtx.add(data)
     } catch (err) {
@@ -51,15 +46,9 @@ export default function Competition({
 
   async function handleLeaveCompetition() {
     try {
-      const res = await fetch(`/api/competitions/${competition.id}/leave`, {
+      const data = await request(`/api/competitions/${competition.id}/leave`, {
         method: 'POST',
       })
-
-      const data = await res.json()
-
-      if (!res.ok) {
-        throw new Error(data.message)
-      }
 
       playerRanksCtx.remove(data.id)
       handleModalClose()
