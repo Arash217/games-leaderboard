@@ -1,6 +1,7 @@
 import styles from './Ladder.module.scss'
 import classNames from 'classnames'
 import isEven from '../../lib/isEven'
+import isPlayer from '../../lib/isPlayer'
 import { useContext } from 'react'
 import PlayerRanksContext from '../../store/PlayerRanksContext'
 import { useUser } from '@auth0/nextjs-auth0'
@@ -24,7 +25,7 @@ export default function Ladder() {
           <div className={styles.players}>
             {groupedPlayerRank.map((playerRank) => (
               <div className={classNames(styles.player)} key={playerRank.id}>
-                {playerRank.player.googleUserId === userCtx?.user?.sub && (
+                {isPlayer(playerRank, userCtx) && (
                   <div className={styles.highlight} />
                 )}
                 <span className={styles['player-name']}>
