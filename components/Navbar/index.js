@@ -30,9 +30,9 @@ export default function Navbar() {
         {user && (
           <div className={styles.authentication}>
             <p className={styles.name}>{user.name}</p>
-            <a href='/api/auth/logout' className='button'>
-              Logout
-            </a>
+            <Link href='/api/auth/logout'>
+              <a className='button'>Logout</a>
+            </Link>
           </div>
         )}
       </nav>
