@@ -92,7 +92,7 @@ export default function Competition({
           <button
             className={classNames(
               'button button--width-150 button--center',
-              styles['leave-button']
+              styles.leaveButton
             )}
             onClick={handleLeaveCompetition}
           >
