@@ -8,35 +8,29 @@
   cursor: pointer;
   transition: background .2s;
 
-  &:hover {
+  &:hover,
+  &:focus {
     background: $active-blue;
   }
-}
 
-.button--clean {
-  border: none;
-  background: none;
-  color: $brand-blue;
-  padding: $spacing-xs;
-  cursor: pointer;
-
-  &:hover {
-    background: $active-yellow;
+  &--clean {
+    border: none;
+    background: none;
+    color: $brand-blue;
+    padding: $spacing-xs;
+    cursor: pointer;
+  
+    &:hover,
+    &:focus {
+      background: $active-yellow;
+    }
   }
-}
 
-.button--width-150 {
-  width: 150px;
-}
+  &--width-150 {
+    width: 150px;
+  }
 
-.button--center {
-  margin: auto;
-}
-
-.button--red {
-  background: $red;
-
-  &:hover {
-    background-color: $dark-red;
+  &--center {
+    margin: auto;
   }
 }

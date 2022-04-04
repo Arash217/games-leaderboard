@@ -102,13 +102,13 @@ export default function CompetitionKebabMenu({ competition }) {
           content={content}
           visible={kebabMenuShown}
         >
-          <div
+          <button
             className={styles.kebab}
             onClick={() => setKebabMenuShown(true)}
             ref={kebabMenuRef}
           >
             <Image src={'/kebab.svg'} alt='kebab menu' width='24' height='24' />
-          </div>
+          </button>
         </Tippy>
       </div>
 
