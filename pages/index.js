@@ -63,7 +63,7 @@ export default function Home({ competitions }) {
         Create Competition
       </button>
 
-      <SearchBar onSearch={handleFilter} />
+      <SearchBar onSearch={handleFilter} placeholder='Filter Competitions...' />
 
       <CompetitionList competitions={filteredCompetitions} />
 

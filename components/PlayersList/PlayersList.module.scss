@@ -1,0 +1,14 @@
+.list {
+  background-color: $brand-yellow;
+  font-size: 1.25rem;
+  margin-top: $spacing-xl;
+
+  > li {
+    text-align: center;
+    padding: $spacing-default;
+  }
+
+  > li:nth-child(even) {
+    background-color: $active-yellow;
+  }
+}

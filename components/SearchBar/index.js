@@ -1,12 +1,12 @@
 import styles from './SearchBar.module.scss'
 
-export default function SearchBar({ onSearch }) {
+export default function SearchBar({ onSearch, placeholder }) {
   return (
     <div className={styles.searchContainer}>
       <input
         onChange={onSearch}
         className={'input'}
-        placeholder='Filter competitions...'
+        placeholder={placeholder}
       />
     </div>
   )
