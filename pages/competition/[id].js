@@ -101,7 +101,7 @@ export default function Competition({
         </Modal>
       )}
 
-      <Ladder />
+      <Ladder competition={competition} />
     </div>
   )
 }

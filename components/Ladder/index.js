@@ -2,13 +2,24 @@ import styles from './Ladder.module.scss'
 import classNames from 'classnames'
 import isEven from '../../lib/isEven'
 import isPlayer from '../../lib/isPlayer'
-import { useContext } from 'react'
+import { useContext, useMemo } from 'react'
 import PlayerRanksContext from '../../store/PlayerRanksContext'
 import { useUser } from '@auth0/nextjs-auth0'
+import ChallengeButton from './ChallengeButton'
 
-export default function Ladder() {
+function isChallengeable(challenger, challengee) {
+  return challenger?.rank - challengee?.rank === 1
+}
+
+export default function Ladder({ competition }) {
   const playerRanksCtx = useContext(PlayerRanksContext)
   const userCtx = useUser()
+
+  const player = useMemo(() => {
+    return playerRanksCtx.playerRanks.find(
+      (playerRank) => playerRank.player.googleUserId === userCtx?.user?.sub
+    )
+  }, [playerRanksCtx.playerRanks, userCtx?.user?.sub])
 
   return (
     <ul className={styles.ladder}>
@@ -24,13 +35,18 @@ export default function Ladder() {
           </div>
           <div className={styles.players}>
             {groupedPlayerRank.map((playerRank) => (
-              <div className={classNames(styles.player)} key={playerRank.id}>
-                {isPlayer(playerRank, userCtx) && (
-                  <div className={styles.highlight} />
+              <div key={playerRank.id} className={styles.playerContainer}>
+                <div className={classNames(styles.player)}>
+                  {playerRank.playerId === player?.playerId && (
+                    <div className={styles.highlight} />
+                  )}
+                  <span className={styles.playerName}>
+                    {playerRank.player.name}
+                  </span>
+                </div>
+                {isChallengeable(player, playerRank) && (
+                  <ChallengeButton competition={competition} challenger={player} challengee={playerRank} />
                 )}
-                <span className={styles['player-name']}>
-                  {playerRank.player.name}
-                </span>
               </div>
             ))}
           </div>

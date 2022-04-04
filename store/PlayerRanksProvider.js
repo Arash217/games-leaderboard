@@ -30,6 +30,30 @@ const playerRanksReducer = (state, action) => {
     return { playerRanks: [...state.playerRanks] }
   }
 
+  if (action.type === 'SWAP') {
+    const challengerPlayerRankIndex = state.playerRanks.findIndex(
+      (playerRank) => playerRank.id === action.challengerPlayerRankId
+    )
+
+    const challengeePlayerRankIndex = state.playerRanks.findIndex(
+      (playerRank) => playerRank.id === action.challengeePlayerRankId
+    )
+
+    const tempRank = state.playerRanks[challengerPlayerRankIndex].rank
+
+    state.playerRanks[challengerPlayerRankIndex].rank =
+      state.playerRanks[challengeePlayerRankIndex].rank
+    state.playerRanks[challengeePlayerRankIndex].rank = tempRank
+
+    const temp = state.playerRanks[challengerPlayerRankIndex]
+
+    state.playerRanks[challengerPlayerRankIndex] =
+      state.playerRanks[challengeePlayerRankIndex]
+    state.playerRanks[challengeePlayerRankIndex] = temp
+
+    return { playerRanks: [...state.playerRanks] }
+  }
+
   return defaultState
 }
 
@@ -82,12 +106,24 @@ const PlayerRanksProvider = ({ children }) => {
     })
   }
 
+  const swapPlayerRanksHandler = (
+    challengerPlayerRankId,
+    challengeePlayerRankId
+  ) => {
+    dispatchPlayerRanksAction({
+      type: 'SWAP',
+      challengerPlayerRankId,
+      challengeePlayerRankId,
+    })
+  }
+
   const playerRanksContext = {
     playerRanks: playerRanksState.playerRanks,
     groupedPlayerRanks,
     set: setPlayerRanksHandler,
     add: addPlayerRankHandler,
     remove: removePlayerRankHandler,
+    swap: swapPlayerRanksHandler,
   }
 
   return (
