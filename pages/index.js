@@ -77,7 +77,7 @@ export default function Home({ competitions }) {
 }
 
 export const getServerSideProps = withPageAuthRequired({
-  async getServerSideProps(ctx) {
+  async getServerSideProps(_) {
     const competitions = await prisma.competition.findMany({
       orderBy: [
         {
