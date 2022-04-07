@@ -1,15 +1,11 @@
 import styles from './Ladder.module.scss'
 import classNames from 'classnames'
 import isEven from '../../lib/isEven'
-import isPlayer from '../../lib/isPlayer'
 import { useContext, useMemo } from 'react'
 import PlayerRanksContext from '../../store/PlayerRanksContext'
 import { useUser } from '@auth0/nextjs-auth0'
 import ChallengeButton from './ChallengeButton'
-
-function isChallengeable(challenger, challengee) {
-  return challenger?.rank - challengee?.rank === 1
-}
+import isChallengeable from '../../lib/isChallengeable'
 
 export default function Ladder({ competition }) {
   const playerRanksCtx = useContext(PlayerRanksContext)
@@ -45,7 +41,11 @@ export default function Ladder({ competition }) {
                   </span>
                 </div>
                 {isChallengeable(player, playerRank) && (
-                  <ChallengeButton competition={competition} challenger={player} challengee={playerRank} />
+                  <ChallengeButton
+                    competition={competition}
+                    challenger={player}
+                    challengee={playerRank}
+                  />
                 )}
               </div>
             ))}
